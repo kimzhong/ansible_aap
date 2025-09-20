@@ -1,3 +1,8 @@
 fastapi
 uvicorn
 ansible-runner
+passlib
+python-jose
+loguru
+motor
+pydantic[email]
