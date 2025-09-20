@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "a_very_secret_key"
     ALGORITHM: str = "HS256"
     MONGODB_URL: str = "mongodb://localhost:27017"
+    MONGODB_DB_NAME: str = "ansible_aap"
 
     class Config:
         env_file = ".env"

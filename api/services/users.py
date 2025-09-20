@@ -1,31 +1,33 @@
-from db.models import User, UserCreate
-from core.security import get_password_hash
+from db.models import User, UserCreate, UserInDB
+from core.password import get_password_hash, verify_password
+from db.database import db
+from core.security import decode_access_token
 
-# This is a mock database. Replace with a real database connection.
-fake_users_db = {}
+async def get_user_by_email(email: str) -> UserInDB | None:
+    return await db.users.find_one({"email": email})
 
-def get_user_by_email(email: str):
-    """
-    Retrieves a user from the database by email.
-    """
-    return fake_users_db.get(email)
+async def get_user_by_token(token: str) -> User | None:
+    decoded_token = decode_access_token(token)
+    if decoded_token:
+        return await db.users.find_one({"email": decoded_token["sub"]})
+    return None
 
-def create_user(user: UserCreate):
+async def create_user(user: UserCreate) -> User:
     """
     Creates a new user in the database.
     """
     hashed_password = get_password_hash(user.password)
-    db_user = User(email=user.email, hashed_password=hashed_password)
-    fake_users_db[user.email] = db_user
+    db_user = UserInDB(email=user.email, hashed_password=hashed_password)
+    await db.users.insert_one(db_user.dict(by_alias=True))
     return db_user
 
-def authenticate_user(email: str, password: str):
+async def authenticate_user(email: str, password: str):
     """
     Authenticates a user by email and password.
     """
-    user = get_user_by_email(email)
+    user = await get_user_by_email(email)
     if not user:
         return None
-    if not user.verify_password(password):
+    if not verify_password(password, user.hashed_password):
         return None
     return user
