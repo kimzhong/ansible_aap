@@ -1,7 +1,7 @@
 from db.models import User, UserCreate, UserInDB
 from core.password import get_password_hash, verify_password
 from db.database import db
-from core.security import decode_access_token
+from core.token import decode_access_token
 
 async def get_user_by_email(email: str) -> UserInDB | None:
     return await db.users.find_one({"email": email})
