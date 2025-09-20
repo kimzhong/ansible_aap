@@ -5,17 +5,34 @@ from typing import Dict, Any
 
 from store import task_results
 
-def wsl_path(windows_path):
+"""
+This module provides functions for running Ansible playbooks.
+"""
+def wsl_path(windows_path: str) -> str:
     """
-    Converts a Windows path to a WSL (Windows Subsystem for Linux) path.
+    Converts a Windows path to a WSL path.
+
+    Args:
+        windows_path: The Windows path to convert.
+
+    Returns:
+        The WSL path.
     """
     path = windows_path.replace('\\', '/')
     drive, rest = path.split(':', 1)
     return f"/mnt/{drive.lower()}{rest}"
 
-def execute_ansible_playbook(task_id: str, playbook_name: str, inventory: str | None = None, extra_vars: Dict[str, Any] | None = None):
+async def execute_ansible_playbook(playbook_name: str, inventory: str, extra_vars: dict) -> dict:
     """
-    Executes an Ansible playbook using ansible-runner inside WSL.
+    Executes an Ansible playbook using ansible-runner in WSL.
+
+    Args:
+        playbook_name: The name of the playbook to execute.
+        inventory: The inventory to use for the playbook.
+        extra_vars: Extra variables to pass to the playbook.
+
+    Returns:
+        A dictionary containing the task result.
     """
     ansible_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'ansible'))
     playbook_path = os.path.join(ansible_dir, f"{playbook_name}.yml")

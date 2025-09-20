@@ -50,9 +50,11 @@ async def register_user(user: UserCreate):
     return await user_service.create_user(user=user)
 
 @router.post("/token")
-async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+async def login_for_access_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+):
     """
-    Authenticates a user and returns a JWT access token.
+    Logs in a user and returns an access token.
     """
     user = await user_service.authenticate_user(email=form_data.username, password=form_data.password)
     if not user:
@@ -69,4 +71,7 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 
 @router.get("/users/me", response_model=User)
 async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+    """
+    Returns the currently authenticated user.
+    """
     return current_user

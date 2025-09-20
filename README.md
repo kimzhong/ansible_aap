@@ -84,9 +84,29 @@ The frontend will be available at `http://localhost:5173`.
 
 ## API Endpoints
 
-*   `GET /api/v1/playbooks`: Get a list of available playbooks.
-*   `POST /api/v1/playbooks/{playbook_name}/run`: Run a specific playbook.
-*   `GET /api/v1/tasks/{task_id}`: Get the status and result of a playbook execution task.
+### Authentication
+
+*   `POST /api/v1/register`: Register a new user.
+*   `POST /api/v1/token`: Authenticate a user and get a JWT access token.
+
+### Users
+
+*   `GET /api/v1/users/me`: Get the details of the currently authenticated user.
+
+### Projects
+
+*   `GET /api/v1/projects`: Get a list of all projects.
+*   `POST /api/v1/projects`: Create a new project.
+*   `GET /api/v1/projects/{project_id}`: Get the details of a specific project.
+*   `PUT /api/v1/projects/{project_id}`: Update a specific project.
+*   `DELETE /api/v1/projects/{project_id}`: Delete a specific project.
+
+### Tasks
+
+*   `GET /api/v1/tasks`: Get a list of all tasks.
+*   `POST /api/v1/tasks`: Create a new task (run a playbook).
+*   `GET /api/v1/tasks/{task_id}`: Get the status and result of a specific task.
+*   `DELETE /api/v1/tasks/{task_id}`: Delete a specific task.
 
 ## Components
 
