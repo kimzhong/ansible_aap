@@ -5,8 +5,9 @@ from datetime import timedelta
 from typing import Annotated
 
 from db.models import User, UserCreate, UserUpdate
-from core.security import RoleChecker
+from core.security import get_current_user, RoleChecker
 from services import users as user_service
+from core.token import create_access_token
 
 router = APIRouter()
 
