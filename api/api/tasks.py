@@ -4,6 +4,7 @@ import uuid
 
 from services.ansible_runner import execute_ansible_playbook
 from store import task_results
+from schemas.task import RunPlaybookRequest
 
 router = APIRouter()
 
@@ -20,13 +21,19 @@ def list_playbooks():
     return {"playbooks": playbooks}
 
 @router.post("/playbooks/{playbook_name}/run", status_code=202)
-def run_playbook(playbook_name: str, background_tasks: BackgroundTasks):
+def run_playbook(playbook_name: str, request: RunPlaybookRequest, background_tasks: BackgroundTasks):
     """
     Triggers the execution of a specific Ansible playbook.
     """
     task_id = str(uuid.uuid4())
     task_results[task_id] = {"status": "running", "data": None}
-    background_tasks.add_task(execute_ansible_playbook, task_id, playbook_name)
+    background_tasks.add_task(
+        execute_ansible_playbook, 
+        task_id, 
+        playbook_name, 
+        inventory=request.inventory, 
+        extra_vars=request.extra_vars
+    )
     return {"task_id": task_id}
 
 @router.get("/tasks/{task_id}")

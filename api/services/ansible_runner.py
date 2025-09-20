@@ -1,6 +1,7 @@
 import os
 import subprocess
 import json
+from typing import Dict, Any
 
 from store import task_results
 
@@ -12,7 +13,7 @@ def wsl_path(windows_path):
     drive, rest = path.split(':', 1)
     return f"/mnt/{drive.lower()}{rest}"
 
-def execute_ansible_playbook(task_id: str, playbook_name: str):
+def execute_ansible_playbook(task_id: str, playbook_name: str, inventory: str | None = None, extra_vars: Dict[str, Any] | None = None):
     """
     Executes an Ansible playbook using ansible-runner inside WSL.
     """
@@ -32,8 +33,20 @@ def execute_ansible_playbook(task_id: str, playbook_name: str):
         wsl_ansible_dir,
         '--playbook',
         f'{playbook_name}.yml',
-        '-j'
     ]
+
+    inventory_path = None
+    if inventory:
+        inventory_path = os.path.join(ansible_dir, f"inventory_{task_id}.ini")
+        with open(inventory_path, "w") as f:
+            f.write(inventory)
+        command.extend(['--inventory', wsl_path(inventory_path)])
+
+    if extra_vars:
+        command.extend(['--extravars', json.dumps(extra_vars)])
+    
+    command.append('-j')
+
 
     try:
         result = subprocess.run(
@@ -68,3 +81,6 @@ def execute_ansible_playbook(task_id: str, playbook_name: str):
             "status": "error",
             "error": "WSL is not installed or not in the system's PATH."
         }
+    finally:
+        if inventory_path and os.path.exists(inventory_path):
+            os.remove(inventory_path)
