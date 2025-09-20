@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api import tasks, users
+from api import tasks, users, projects
 from core.config import settings
 from db.database import connect_to_mongo, close_mongo_connection
 
@@ -10,6 +10,7 @@ app.add_event_handler("shutdown", close_mongo_connection)
 
 app.include_router(tasks.router, prefix=settings.API_V1_STR, tags=["tasks"])
 app.include_router(users.router, prefix=settings.API_V1_STR, tags=["users"])
+app.include_router(projects.router, prefix=settings.API_V1_STR, tags=["projects"])
 
 @app.get("/")
 def read_root():
