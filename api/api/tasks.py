@@ -3,11 +3,9 @@ import os
 import uuid
 
 from services.ansible_runner import execute_ansible_playbook
+from store import task_results
 
 router = APIRouter()
-
-# In-memory storage for task results.
-task_results = {}
 
 @router.get("/playbooks")
 def list_playbooks():

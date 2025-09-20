@@ -2,7 +2,7 @@ import os
 import subprocess
 import json
 
-from api.api.tasks import task_results
+from store import task_results
 
 def wsl_path(windows_path):
     """
