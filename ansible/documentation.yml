@@ -1,0 +1,7 @@
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Generate documentation
+      shell: "ansible-doc -l > documentation.md"
+      args:
+        chdir: /path/to/your/app/ansible

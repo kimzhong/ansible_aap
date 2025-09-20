@@ -1,0 +1,11 @@
+1.使用python和fast api 开发一个ansible管理平台，实现ansible的任务执行和结果展示
+遵循restful api 设计规范，使用mongodb作为数据库，支持动态更改表结构
+2.使用vue3和element-plus 开发一个ansible管理平台的前端界面，实现用户登录、任务执行、结果展示等功能
+3.使用docker-compose 部署ansible管理平台，包括前端、后端、数据库等组件
+4.使用github actions 实现ansible管理平台的持续集成和持续部署
+5.使用ansible 实现ansible管理平台的自动部署和更新
+6.使用ansible 实现ansible管理平台的自动备份和恢复
+7.使用ansible 实现ansible管理平台的自动监控和报警
+8.使用ansible 实现ansible管理平台的自动伸缩和高可用
+9.使用ansible 实现ansible管理平台的自动日志和审计
+10.使用ansible 实现ansible管理平台的自动文档和知识分享

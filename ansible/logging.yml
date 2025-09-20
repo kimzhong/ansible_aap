@@ -1,0 +1,12 @@
+- hosts: all
+  tasks:
+    - name: Get logs from all services
+      command: docker-compose logs
+      args:
+        chdir: /path/to/your/app
+      register: logs
+
+    - name: Save logs to file
+      copy:
+        content: "{{ logs.stdout }}"
+        dest: /path/to/your/logs/logs-{{ ansible_date_time.iso8601 }}.log

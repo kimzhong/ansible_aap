@@ -1,0 +1,9 @@
+- hosts: all
+  vars:
+    api_replicas: 3
+    frontend_replicas: 2
+  tasks:
+    - name: Scale the services
+      command: docker-compose up -d --scale api={{ api_replicas }} --scale frontend={{ frontend_replicas }}
+      args:
+        chdir: /path/to/your/app

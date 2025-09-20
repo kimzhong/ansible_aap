@@ -1,0 +1,16 @@
+- hosts: all
+  tasks:
+    - name: Stop the stack
+      command: docker-compose down
+      args:
+        chdir: /path/to/your/app
+
+    - name: Backup data
+      archive:
+        path: /path/to/your/app/data
+        dest: /path/to/your/backups/backup-{{ ansible_date_time.iso8601 }}.tar.gz
+
+    - name: Start the stack
+      command: docker-compose up -d
+      args:
+        chdir: /path/to/your/app

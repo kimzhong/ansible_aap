@@ -1,0 +1,17 @@
+- hosts: all
+  tasks:
+    - name: Stop the stack
+      command: docker-compose down
+      args:
+        chdir: /path/to/your/app
+
+    - name: Restore data
+      unarchive:
+        src: /path/to/your/backups/latest-backup.tar.gz
+        dest: /path/to/your/app/data
+        remote_src: yes
+
+    - name: Start the stack
+      command: docker-compose up -d
+      args:
+        chdir: /path/to/your/app

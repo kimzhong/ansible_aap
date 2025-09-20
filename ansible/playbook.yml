@@ -1,0 +1,13 @@
+- hosts: all
+  tasks:
+    - name: Pull latest code
+      git:
+        repo: https://github.com/your-repo/ansible_aap.git
+        dest: /path/to/your/app
+        version: main
+        force: yes
+
+    - name: Build and run the stack
+      command: docker-compose up -d --build
+      args:
+        chdir: /path/to/your/app

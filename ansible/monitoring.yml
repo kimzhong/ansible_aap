@@ -1,0 +1,15 @@
+- hosts: all
+  tasks:
+    - name: Check container status
+      community.docker.docker_container_info:
+        name: "{{ item }}"
+      register: container_status
+      loop:
+        - ansible_aap_frontend_1
+        - ansible_aap_api_1
+
+    - name: Send alert if container is not running
+      debug:
+        msg: "Alert: Container {{ item.item }} is not running!"
+      when: not item.container.State.Running
+      loop: "{{ container_status.results }}"
