@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.api import tasks, users
+from api import tasks, users
 from core.config import settings
 from db.database import connect_to_mongo, close_mongo_connection
 
