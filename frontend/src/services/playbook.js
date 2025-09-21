@@ -25,8 +25,8 @@ const request = async (url, options = {}) => {
   return response.json();
 };
 
-export default {
-  listPlaybooks() {
+export const playbookService = {
+  getPlaybooks() {
     return request('/playbooks');
   },
 
@@ -41,3 +41,5 @@ export default {
     return request(`/tasks/${taskId}`);
   },
 };
+
+export default playbookService;

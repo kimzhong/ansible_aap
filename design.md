@@ -32,8 +32,9 @@
     -   `auth.py`: 用户认证（登录、注册）。
     -   `users.py`: 用户管理 CRUD。
     -   `projects.py`: 项目管理 CRUD。
-    -   `inventories.py`: Inventory 管理 CRUD。
-    -   `tasks.py`: 任务执行和结果查询。
+    -   `tasks.py`: 任务执行和结果查询，包含 playbooks 相关端点。
+        - `GET /playbooks`: 获取可用的 Ansible playbooks 列表
+        - `POST /playbooks/{playbook_name}/run`: 执行指定的 playbook
 -   **`core/`**: 核心业务逻辑。
     -   `config.py`: 应用配置管理。
     -   `security.py`: 密码哈希、JWT令牌生成与验证。

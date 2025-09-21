@@ -87,3 +87,50 @@
 - 测试通过。API 成功地异步执行了任务并返回了预期的结果。
 
 ---
+
+## 测试用例 3: 前端 Playbooks 加载和显示
+
+**ID:** TC-003
+**描述:** 验证前端应用是否能正确加载和显示可用的 Ansible playbooks。
+
+**前置条件:**
+- FastAPI 后端服务器正在运行 (http://localhost:8000)。
+- Vue.js 前端应用正在运行 (http://localhost:5173)。
+- ansible/ 目录包含多个 .yml playbook 文件。
+
+**测试步骤:**
+1. 打开浏览器访问 http://localhost:5173
+2. 导航到 Playbook 页面
+3. 观察 playbooks 下拉选择框的内容
+
+**预期结果:**
+- 页面成功加载，无错误信息
+- playbooks 下拉选择框显示所有可用的 playbook 选项
+- 每个 playbook 作为独立的选项显示（如：backup, documentation, logging 等）
+
+**问题记录 (2025-01-22):**
+- **问题:** 前端显示 "Failed to load playbooks" 错误
+- **问题:** playbooks 显示为单个长字符串而不是独立选项
+
+**问题分析:**
+1. 后端 API `/api/v1/playbooks` 返回格式: `{"playbooks": ["backup", "documentation", ...]}`
+2. 前端代码错误地将整个响应对象赋值给 `playbooks.value`
+3. 应该提取 `response.playbooks` 数组
+
+**解决方案:**
+修改 `frontend/src/views/Playbook.vue` 中的 `onMounted` 函数:
+```javascript
+// 修改前 (错误)
+playbooks.value = await playbookService.getPlaybooks();
+
+// 修改后 (正确)
+const response = await playbookService.getPlaybooks();
+playbooks.value = response.playbooks || [];
+```
+
+**实际结果 (2025-01-22):**
+- 问题已修复。前端现在正确显示所有可用的 playbook 选项。
+- 每个 playbook 作为独立的下拉选项显示。
+- 不再出现 "Failed to load playbooks" 错误。
+
+---

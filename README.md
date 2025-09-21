@@ -86,9 +86,32 @@ The frontend will be available at `http://localhost:5173`.
     ```
 
 2.  Open your browser and navigate to the frontend URL (e.g., `http://localhost:5173`).
-3.  The application will display a list of available Ansible playbooks.
-4.  Click the "Run" button next to a playbook to execute it.
+3.  The application will display a list of available Ansible playbooks from the `ansible/` directory.
+4.  Select a playbook from the dropdown menu and click the "Run" button to execute it.
 5.  The application will poll the backend for the task status and display the results once the playbook execution is complete.
+
+## Known Issues and Fixes
+
+### Frontend Playbook Loading Issue (Fixed)
+
+**Problem:** The frontend was displaying "Failed to load playbooks" error and showing playbooks as a single concatenated string instead of individual options.
+
+**Root Cause:** 
+- The backend API `/api/v1/playbooks` returns data in the format `{"playbooks": ["backup", "documentation", ...]}` 
+- The frontend was directly assigning the entire response object to `playbooks.value` instead of extracting the `playbooks` array
+
+**Solution:** 
+Modified the `onMounted` function in `Playbook.vue` to properly extract the playbooks array:
+```javascript
+// Before (incorrect)
+playbooks.value = await playbookService.getPlaybooks();
+
+// After (correct)
+const response = await playbookService.getPlaybooks();
+playbooks.value = response.playbooks || [];
+```
+
+This ensures that each playbook appears as a separate option in the dropdown menu.
 
 ## API Endpoints
 
@@ -115,6 +138,11 @@ The frontend will be available at `http://localhost:5173`.
 *   `POST /api/v1/tasks`: Create a new task (run a playbook).
 *   `GET /api/v1/tasks/{task_id}`: Get the status and result of a specific task.
 *   `DELETE /api/v1/tasks/{task_id}`: Delete a specific task.
+
+### Playbooks
+
+*   `GET /api/v1/playbooks`: Get a list of available Ansible playbooks from the ansible directory.
+*   `POST /api/v1/playbooks/{playbook_name}/run`: Execute a specific playbook by name.
 
 ## Components
 
