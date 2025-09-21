@@ -54,10 +54,11 @@
     -   **`router/`**: Vue Router 的路由配置。
     -   **`store/`**: Pinia 或 Vuex 的状态管理。
     -   **`views/`**: 页面级组件。
-        -   `Login.vue`: 登录页面。
-        -   `Dashboard.vue`: 仪表盘。
-        -   `Projects.vue`: 项目列表页面。
-        -   `Tasks.vue`: 任务列表和详情页面。
+        -   `Login.vue`: 登录页面，包含用户名和密码输入表单。
+        -   `Home.vue`: 主页仪表盘，集成登出功能和 Playbook 执行界面。
+        -   `Playbook.vue`: Playbook 执行页面，提供 Playbook 选择、运行和状态监控功能。
+    -   **`services/`**: API 服务层。
+        -   `playbook.js`: 封装 Playbook 相关的 API 调用（列出、运行、获取任务结果）。
 
 ## 3. API 设计
 
@@ -65,8 +66,12 @@
 
 -   **认证**: 使用 JWT (JSON Web Tokens) 进行无状态认证。
     -   `POST /api/v1/login`: 用户登录，成功后返回 JWT。
+    -   `POST /api/v1/logout`: 用户登出（前端清除 JWT）。
 -   **用户**: ` /api/v1/users`
 -   **项目**: ` /api/v1/projects`
+-   **Playbooks**: `/api/v1/playbooks`
+    -   `GET /api/v1/playbooks`: 获取可用的 Playbook 列表。
+    -   `POST /api/v1/playbooks/{playbook_name}/run`: 运行指定的 Playbook。
 -   **任务**: ` /api/v1/tasks`
     -   `POST /api/v1/projects/{project_id}/launch`: 启动一个新任务。
     -   `GET /api/v1/tasks/{task_id}`: 获取任务状态和结果。
