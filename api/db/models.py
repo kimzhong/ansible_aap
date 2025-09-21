@@ -1,8 +1,9 @@
 from typing import Any
-from pydantic import BaseModel, EmailStr, Field, GetCoreSchemaHandler
+from pydantic import BaseModel, EmailStr, Field, GetCoreSchemaHandler, HttpUrl
 from pydantic_core import core_schema
 from bson import ObjectId
-from typing import List
+from typing import List, Optional
+from datetime import datetime
 
 class PyObjectId(ObjectId):
     @classmethod
@@ -75,7 +76,9 @@ class ProjectBase(BaseModel):
     Base model for a project.
     """
     name: str
-    description: str | None = None
+    description: Optional[str] = None
+    git_url: HttpUrl
+    branch: str = "main"
 
 class ProjectCreate(ProjectBase):
     """
@@ -83,13 +86,35 @@ class ProjectCreate(ProjectBase):
     """
     pass
 
+class ProjectUpdate(BaseModel):
+    """
+    Model for updating a project.
+    """
+    name: Optional[str] = None
+    description: Optional[str] = None
+    git_url: Optional[HttpUrl] = None
+    branch: Optional[str] = None
+
 class Project(ProjectBase):
     """
     Model for representing a project in the database.
     """
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    status: str = "active"  # active, syncing, error
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    last_sync: Optional[datetime] = None
 
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+        json_encoders = {ObjectId: str, datetime: lambda v: v.isoformat()}
+
+class ProjectSync(BaseModel):
+    """
+    Model for project sync response.
+    """
+    project_id: str
+    status: str
+    message: str
+    sync_started_at: datetime = Field(default_factory=datetime.utcnow)
