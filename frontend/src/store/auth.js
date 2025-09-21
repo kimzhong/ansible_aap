@@ -10,13 +10,16 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     async login(email, password) {
-      // Replace with your actual API call
-      const response = await fetch('/api/users/login', {
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
+
+      const response = await fetch('/api/v1/token', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ email, password }),
+        body: formData,
       });
 
       if (response.ok) {

@@ -4,7 +4,10 @@ from db.database import db
 from core.token import decode_access_token
 
 async def get_user_by_email(email: str) -> UserInDB | None:
-    return await db.users.find_one({"email": email})
+    user = await db.users.find_one({"email": email})
+    if user:
+        return UserInDB(**user)
+    return None
 
 async def get_user_by_token(token: str) -> User | None:
     decoded_token = decode_access_token(token)

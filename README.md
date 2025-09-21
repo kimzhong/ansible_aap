@@ -77,10 +77,18 @@ The frontend will be available at `http://localhost:5173`.
 
 ## Usage
 
-1.  Open your browser and navigate to the frontend URL (e.g., `http://localhost:5173`).
-2.  The application will display a list of available Ansible playbooks.
-3.  Click the "Run" button next to a playbook to execute it.
-4.  The application will poll the backend for the task status and display the results once the playbook execution is complete.
+1.  **Register a new user:** Before you can run playbooks, you need to register a new user. You can do this by sending a POST request to the `/api/v1/register` endpoint with a JSON payload containing `email` and `password`.
+
+    **Example using curl:**
+
+    ```bash
+    curl -X POST "http://localhost:8000/api/v1/register" -H "Content-Type: application/json" -d '{"email": "testuser@example.com", "password": "password"}'
+    ```
+
+2.  Open your browser and navigate to the frontend URL (e.g., `http://localhost:5173`).
+3.  The application will display a list of available Ansible playbooks.
+4.  Click the "Run" button next to a playbook to execute it.
+5.  The application will poll the backend for the task status and display the results once the playbook execution is complete.
 
 ## API Endpoints
 
